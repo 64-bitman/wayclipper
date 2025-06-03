@@ -30,9 +30,10 @@ INCLUDE_PATH := ./src/include
 TARGET_NAME := wayclipper
 TARGET := $(BIN_PATH)/$(TARGET_NAME)
 
-SRC := main.c ext-data-control-unstable-v1.c wlr-data-control-unstable-v1.c virtual-keyboard-unstable-v1.c
-OBJ := $(addprefix $(OBJ_PATH)/, $(SRC:.c=.o))
-DEPS := $(addprefix $(DEP_PATH)/, $(notdir $(OBJ:.o=.d)))
+SRC := main.c types.c config.c ext-data-control-unstable-v1.c wlr-data-control-unstable-v1.c virtual-keyboard-unstable-v1.c
+OBJ := $(addprefix $(OBJ_PATH)/, $(notdir $(SRC:.c=.o)))
+OBJ +=  $(SRC_PATH)/tomlc17/src/libtomlc17.a
+DEPS := $(addprefix $(DEP_PATH)/, $(OBJ:.o=.d))
 
 all: prebuild $(TARGET)
 
@@ -42,18 +43,22 @@ prebuild:
 rebuild: clean all
 
 clean:
-	rm -fr build/release/*/*
-	rm -fr build/debug/*/*
+	rm -rf build/release/*/*
+	rm -rf build/debug/*/*
+	rm -rf $(SRC_PATH)/tomlc17/src/libtomlc17.a
 
 run: all
-	./$(TARGET)
+	./$(TARGET) --daemon
 
 $(TARGET): $(OBJ)
 	$(CC) $(CFLAGS) -o $@ $^ $(CLIBS)
 
 $(OBJ_PATH)/%.o: $(SRC_PATH)/%.c
-	$(CC) $(CFLAGS) -I$(INCLUDE_PATH) -MD -MP -MF $(DEP_PATH)/$(notdir $(basename $@).d) -o $@ -c $< $(CLIBS)
+	$(CC) $(CFLAGS) -I$(INCLUDE_PATH) -I$(SRC_PATH)/tomlc17/src -MD -MP -MF $(DEP_PATH)/$(notdir $(basename $@).d) -o $@ -c $< $(CLIBS)
+
+$(SRC_PATH)/tomlc17/src/libtomlc17.a:
+	$(MAKE) -C $(SRC_PATH)/tomlc17
 
 -include $(DEPS)
 
-.PHONY: all clean prebuild rebuild run
+.PHONY: all clean prebuild rebuild run $(SRC_PATH)/tomlc17
