@@ -92,7 +92,11 @@ void uninit_wayland_connection(struct wayland_connection *ct)
 
     struct seat *seat;
 
-    wl_array_for_each(seat, &ct->gobjects.seats) free_seat_contents(seat);
+    wl_array_for_each(seat, &ct->gobjects.seats)
+    {
+        free_seat_contents(seat);
+    }
+
     wl_array_release(&ct->gobjects.seats);
 
     if (ct->registry.proxy != NULL)
