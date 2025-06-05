@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+    <schema id="com.github.64bitman.clippor" path="/com/github/64bitman/clippor/" gettext-domain="clippor">
+        <key name="max-entries" type="t">
+            <default>100</default>
+            <summary>Maximum number of entries to hold in history</summary>
+            <description></description>
+        </key>
+    </schema>
+</schemalist>

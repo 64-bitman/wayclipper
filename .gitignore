@@ -14,3 +14,4 @@ compile_commands.json
 bin/
 bin/*
 Session.vim
+schemas/gschemas.compiled

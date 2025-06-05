@@ -18,7 +18,7 @@ reset:
 clean:
 	meson compile -C build/ --clean
 
-run:
-	build/stashman --daemon
+run: all
+	GSETTINGS_SCHEMA_DIR=schemas/ build/clippor --debug --server
 
 .PHONY: all reset clean run
